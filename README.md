@@ -20,9 +20,10 @@ A dark-themed, responsive movie search application that allows users to search f
    - Copy your API key
 
 2. **Configure the Application**
-   - Open `script.js`
-   - Find the line: `const API_KEY = 'YOUR_API_KEY_HERE';`
+   - Copy `config.example.js` to `config.js`
+   - Open `config.js`
    - Replace `'YOUR_API_KEY_HERE'` with your actual API key
+   - **Important**: `config.js` is ignored by Git and won't be committed to GitHub
 
 3. **Run the Application**
    - Open `index.html` in your web browser
@@ -47,11 +48,20 @@ A dark-themed, responsive movie search application that allows users to search f
 ## File Structure
 
 ```
-├── index.html      # Main HTML file
-├── style.css       # CSS styles and responsive design
-├── script.js       # JavaScript functionality
-├── prompts.md      # Development prompts and requirements
-└── README.md       # This file
+├── index.html          # Main HTML file
+├── style.css           # CSS styles and responsive design
+├── script.js           # JavaScript functionality
+├── config.example.js   # Example configuration file
+├── config.js           # Your API configuration (not committed to Git)
+├── .gitignore          # Git ignore file
+├── prompts.md          # Development prompts and requirements
+└── README.md           # This file
 ```
 
-To get started, create a new Codespace from this repo.
+## Security Notice
+
+- ✅ `config.js` contains your API key and is **not committed** to GitHub
+- ✅ `config.example.js` shows the structure without exposing keys
+- ✅ `.gitignore` ensures sensitive files stay local
+
+You can Codespace my repo if you would like :) 

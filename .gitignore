@@ -1,0 +1,19 @@
+# Big Movie Weekend App
+
+# Files to ignore
+config.js
+.env
+*.env
+*.env.local
+*.env.production
+
+# Dependencies
+node_modules/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

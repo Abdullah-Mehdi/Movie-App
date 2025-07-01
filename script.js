@@ -4,8 +4,9 @@ const movieSearch = document.getElementById('movie-search');
 const movieResults = document.getElementById('movie-results');
 const watchlist = document.getElementById('watchlist');
 
-// OMDb API key - You'll need to get your own free API key from http://www.omdbapi.com/apikey.aspx
-const API_KEY = '568e1500'; 
+// OMDb API configuration
+// API key is loaded from config.js (not committed to GitHub)
+const API_KEY = CONFIG?.OMDB_API_KEY || 'demo_key'; // Fallback for demo
 const API_URL = 'https://www.omdbapi.com/';
 
 // Load watchlist from localStorage when page loads
