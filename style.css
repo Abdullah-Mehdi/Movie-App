@@ -185,6 +185,87 @@ footer a:hover {
   text-decoration: underline;
 }
 
+/* Modal Styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+  background-color: #22254b;
+  margin: 60px auto;
+  padding: 24px 24px 16px 24px;
+  border-radius: 10px;
+  width: 95%;
+  max-width: 420px;
+  color: #f1f1f1;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+.close {
+  color: #e94560;
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  font-size: 32px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.close:hover {
+  color: #fff;
+}
+
+#modal-body img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+#modal-body h2 {
+  margin-bottom: 8px;
+  color: #ee4f69;
+}
+#modal-body p {
+  margin: 6px 0;
+  font-size: 16px;
+}
+#modal-body strong {
+  color: #ccd9ff;
+}
+
+/* Details Button */
+.btn-details {
+  background-color: #ffd166;
+  color: #22254b;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+  font-weight: 600;
+  transition: background 0.3s, color 0.3s;
+  display: inline-block;
+}
+.btn-details:hover {
+  background-color: #ffe49c;
+  color: #e94560;
+}
+
+/* Button Row in Card */
+.button-row {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
 @media (max-width: 768px) {
   .movie-card {
     flex: 0 0 calc(50% - 12px);
