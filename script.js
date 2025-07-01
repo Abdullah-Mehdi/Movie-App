@@ -1,0 +1,162 @@
+// Get DOM elements
+const searchForm = document.getElementById('search-form');
+const movieSearch = document.getElementById('movie-search');
+const movieResults = document.getElementById('movie-results');
+const watchlist = document.getElementById('watchlist');
+
+// OMDb API key - You'll need to get your own free API key from http://www.omdbapi.com/apikey.aspx
+const API_KEY = '568e1500'; 
+const API_URL = 'https://www.omdbapi.com/';
+
+// Load watchlist from localStorage when page loads
+let watchlistMovies = JSON.parse(localStorage.getItem('watchlist')) || [];
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+    displayWatchlist();
+});
+
+// Handle form submission for movie search
+searchForm.addEventListener('submit', async function(event) {
+    event.preventDefault(); // Prevent form from submitting normally
+    
+    const searchTerm = movieSearch.value.trim(); // Get search term and remove extra spaces
+    
+    if (searchTerm === '') {
+        return; // Don't search if input is empty
+    }
+    
+    await searchMovies(searchTerm);
+});
+
+// Function to search for movies using OMDb API
+async function searchMovies(searchTerm) {
+    // Show loading message
+    movieResults.innerHTML = '<div class="no-results">Searching for movies...</div>';
+    
+    // Build the API URL with search parameters
+    const url = `${API_URL}?apikey=${API_KEY}&s=${encodeURIComponent(searchTerm)}&type=movie`;
+    
+    // Log the URL for debugging
+    console.log('Fetching from URL:', url);
+    
+    // Fetch data from the API
+    const response = await fetch(url);
+    
+    // Check if the response is ok
+    if (!response.ok) {
+        movieResults.innerHTML = '<div class="no-results">Error connecting to movie database. Please try again.</div>';
+        console.error('API response not ok:', response.status, response.statusText);
+        return;
+    }
+    
+    const data = await response.json();
+    console.log('API response:', data); // Log response for debugging
+    
+    // Check if search was successful
+    if (data.Response === 'True') {
+        displayMovies(data.Search); // Display the movies found
+    } else {
+        // Show error message based on API response
+        const errorMessage = data.Error || 'No movies found. Try a different search term.';
+        movieResults.innerHTML = `<div class="no-results">${errorMessage}</div>`;
+    }
+}
+
+// Function to display movies in the results section
+function displayMovies(movies) {
+    // Clear previous results
+    movieResults.innerHTML = '';
+    
+    // Loop through each movie and create a card
+    movies.forEach(movie => {
+        const movieCard = createMovieCard(movie, 'add');
+        movieResults.appendChild(movieCard);
+    });
+}
+
+// Function to create a movie card element
+function createMovieCard(movie, buttonType) {
+    // Create the main card container
+    const card = document.createElement('div');
+    card.className = 'movie-card';
+    
+    // Check if movie has a poster image
+    const posterUrl = movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/300x450?text=No+Poster';
+    
+    // Create the HTML content for the card
+    card.innerHTML = `
+        <img src="${posterUrl}" alt="${movie.Title}" class="movie-poster">
+        <div class="movie-info">
+            <h3 class="movie-title">${movie.Title}</h3>
+            <p class="movie-year">${movie.Year}</p>
+            ${buttonType === 'add' ? 
+                `<button class="btn btn-add" onclick="addToWatchlist('${movie.imdbID}', '${movie.Title.replace(/'/g, "\\'")}', '${movie.Year}', '${posterUrl}')">
+                    <i class="fas fa-plus"></i> Add to Watchlist
+                </button>` :
+                `<button class="btn btn-remove" onclick="removeFromWatchlist('${movie.imdbID}')">
+                    <i class="fas fa-trash"></i> Remove
+                </button>`
+            }
+        </div>
+    `;
+    
+    return card;
+}
+
+// Function to add a movie to the watchlist
+function addToWatchlist(imdbID, title, year, poster) {
+    // Check if movie is already in watchlist to prevent duplicates
+    const existingMovie = watchlistMovies.find(movie => movie.imdbID === imdbID);
+    
+    if (existingMovie) {
+        alert('This movie is already in your watchlist!');
+        return;
+    }
+    
+    // Create movie object
+    const movie = {
+        imdbID: imdbID,
+        Title: title,
+        Year: year,
+        Poster: poster
+    };
+    
+    // Add movie to watchlist array
+    watchlistMovies.push(movie);
+    
+    // Save to localStorage to persist data
+    localStorage.setItem('watchlist', JSON.stringify(watchlistMovies));
+    
+    // Update the watchlist display
+    displayWatchlist();
+}
+
+// Function to remove a movie from the watchlist
+function removeFromWatchlist(imdbID) {
+    // Filter out the movie with the matching ID
+    watchlistMovies = watchlistMovies.filter(movie => movie.imdbID !== imdbID);
+    
+    // Save updated watchlist to localStorage
+    localStorage.setItem('watchlist', JSON.stringify(watchlistMovies));
+    
+    // Update the watchlist display
+    displayWatchlist();
+}
+
+// Function to display the watchlist
+function displayWatchlist() {
+    // Clear current watchlist display
+    watchlist.innerHTML = '';
+    
+    if (watchlistMovies.length === 0) {
+        // Show empty message if no movies in watchlist
+        watchlist.innerHTML = '<div class="no-results">Your watchlist is empty. Search for movies to add!</div>';
+    } else {
+        // Create cards for each movie in watchlist
+        watchlistMovies.forEach(movie => {
+            const movieCard = createMovieCard(movie, 'remove');
+            watchlist.appendChild(movieCard);
+        });
+    }
+}
